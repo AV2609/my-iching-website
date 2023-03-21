@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Ching Reading</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+        }
+
+        .coin {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            background-image: url('coin.png');
+            background-size: cover;
+            cursor: pointer;
+            transform: perspective(600px) rotateY(0deg);
+            transition: transform 1s;
+        }
+
+        .coin:hover {
+            transform: perspective(600px) rotateY(360deg);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>I Ching Reading</h1>
+    <div class="coin"></div>
+    <table id="result-table" style="display: none;">
+        <thead>
+            <tr>
+                <th>Hexagram</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td id="hexagram-name"></td>
+                <td id="hexagram-description"></td>
+            </tr>
+            <tr id="changed-hexagram-row" style="display: none;">
+                <td id="changed-hexagram-name"></td>
+                <td id="changed-hexagram-description"></td>
+            </tr>
+        </tbody>
+    </table>
+    <script src="iching.js"></script>
+    <script>
+        document.querySelector(".coin").addEventListener("click", function () {
+            const hexagram = generateHexagram();
+            const hexagramNumber = getHexagramNumber(hexagram);
+            const [hexagramName, hexagramDescription] = getHexagramInfo(hexagramNumber);
+
+            document.getElementById("result-table").style.display = "table";
+            document.getElementById("hexagram-name").textContent = `#${hexagramNumber}: ${hexagramName}`;
+            document.getElementById("hexagram-description").textContent = hexagramDescription;
+
+            if (hexagram.some(line => line === 6 || line === 9)) {
+                const changedHexagram = generateChangedHexagram(hexagram);
+                const changedHexagramNumber = getHexagramNumber(changedHexagram);
+                const [changedHexagramName, changedHexagramDescription] = getHexagramInfo(changedHexagramNumber);
+
+                document.getElementById("changed-hexagram-row").style.display = "table-row";
+                document.getElementById("changed-hexagram-name").textContent = `#${changedHexagramNumber}: ${changedHexagramName}`;
+                document.getElementById("changed-hexagram-description").textContent = changedHexagramDescription;
+            } else {
+                document.getElementById("changed-hexagram-row").style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
